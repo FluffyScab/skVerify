@@ -15,8 +15,8 @@
 
 options:
     botName: skVerify
-    token: TOKEN GOES HERE
-    vRole: VERIFIED ROLE ID GOES HERE
+    token: TOKEN GOES HERE   # CHANGE ME
+    vRole: VERIFIED ROLE ID GOES HERE   # CHANGE ME
 
 on skript start:
     login to "{@token}" with the name "skVerify"
