@@ -1,0 +1,48 @@
+#
+#░██████╗██╗░░██╗██╗░░░██╗███████╗██████╗░██╗███████╗██╗░░░██╗  ██████╗░██╗░░░██╗
+#██╔════╝██║░██╔╝██║░░░██║██╔════╝██╔══██╗██║██╔════╝╚██╗░██╔╝  ██╔══██╗╚██╗░██╔╝
+#╚█████╗░█████═╝░╚██╗░██╔╝█████╗░░██████╔╝██║█████╗░░░╚████╔╝░  ██████╦╝░╚████╔╝░
+#░╚═══██╗██╔═██╗░░╚████╔╝░██╔══╝░░██╔══██╗██║██╔══╝░░░░╚██╔╝░░  ██╔══██╗░░╚██╔╝░░
+#██████╔╝██║░╚██╗░░╚██╔╝░░███████╗██║░░██║██║██║░░░░░░░░██║░░░  ██████╦╝░░░██║░░░
+#╚═════╝░╚═╝░░╚═╝░░░╚═╝░░░╚══════╝╚═╝░░╚═╝╚═╝╚═╝░░░░░░░░╚═╝░░░  ╚═════╝░░░░╚═╝░░░
+#
+#████████╗███████╗░██████╗░█████╗░░█████╗░███████╗██╗░░██╗██████╗░██████╗░███████╗░██████╗░██████╗
+#╚══██╔══╝██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝
+#░░░██║░░░█████╗░░╚█████╗░██║░░╚═╝██║░░██║█████╗░░░╚███╔╝░██████╔╝██████╔╝█████╗░░╚█████╗░╚█████╗░
+#░░░██║░░░██╔══╝░░░╚═══██╗██║░░██╗██║░░██║██╔══╝░░░██╔██╗░██╔═══╝░██╔══██╗██╔══╝░░░╚═══██╗░╚═══██╗
+#░░░██║░░░███████╗██████╔╝╚█████╔╝╚█████╔╝███████╗██╔╝╚██╗██║░░░░░██║░░██║███████╗██████╔╝██████╔╝
+#░░░╚═╝░░░╚══════╝╚═════╝░░╚════╝░░╚════╝░╚══════╝╚═╝░░╚═╝╚═╝░░░░░╚═╝░░╚═╝╚══════╝╚═════╝░╚═════╝░
+
+options:
+    botName: skVerify
+    token: TOKEN GOES HERE
+    vRole: VERIFIED ROLE ID GOES HERE
+
+on skript start:
+    login to "{@token}" with the name "skVerify"
+    set status of "{@botName}" to online
+    mark "{@botName}" as watching "^verify"
+
+command /verify:
+    trigger:
+        if {verified::%player's uuid%} is set:
+            send "&cYou have already verified yourself!"
+        else:
+            set {_verifyNumber} to random integer from 10000 to 99999
+            if {inUse::*} contains {_verifyNumber}:
+                set {_verifyNumber} to random integer from 10000 to 99999
+            add {_verifyNumber} to {inUse::*}
+            set {%{_verifyNumber}%::username} to player
+            send "&aHello! To continute with the verification process please head over to the ##verify channel in our discord. %nl%%nl%&a Once you're there, type in ^verify %{_verifyNumber}%."
+
+discord command ^verify <integer>:
+    trigger:
+        if {inUse::*} contains arg-1:
+            send "&aYou have been verified!" to {%arg-1%::username}
+            set the discord nickname of event-member to {%arg-1%::username}
+            wait 1 second
+            add role with id "{@vRole}" to the roles of event-member
+            remove arg-1 from {inUse::*}
+            set {verified::%{%arg-1%::username}%} to true
+        else:
+            reply with "This number is incorrect! Please enter the correct number."
